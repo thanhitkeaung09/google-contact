@@ -1,0 +1,14 @@
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.shadow{
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+/*.active{*/
+/*    @apply 'bg-blue-400 rounded-full text-white'*/
+/*}*/
+
+
