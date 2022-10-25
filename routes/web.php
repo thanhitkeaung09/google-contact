@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,10 +26,14 @@ Route::resource('/contact',\App\Http\Controllers\ContactController::class);
 Route::resource('/photo',\App\Http\Controllers\PhotoController::class);
 
 Route::post('/multipleDelete',[\App\Http\Controllers\ContactController::class,'multipleDeltete'])->name('contact.multipleDelete');
+Route::post('/multipleCopy',[\App\Http\Controllers\ContactController::class,'multipleCopy'])->name('contact.multipleCopy');
 Route::get('/trashBin',[\App\Http\Controllers\ContactController::class,'trashBin'])->name('contact.trash');
 Route::delete("/forceDelete/{id}",[\App\Http\Controllers\ContactController::class,'forceDelete'])->name('contact.forceDelete');
 Route::post("/restore/{id}",[\App\Http\Controllers\ContactController::class,'restore'])->name('contact.restore');
 //Route::post('/selectAll',[\App\Http\Controllers\ContactController::class,'selectAll'])->name("contact.selectAll");
+Route::post('/copy/{id}',[\App\Http\Controllers\ContactController::class,'copy'])->name('contact.copy');
+// routes/web.php
+
 
 Route::get('users/export/', [\App\Http\Controllers\ContactController::class, 'export'])->name('contact.export');
 require __DIR__.'/auth.php';

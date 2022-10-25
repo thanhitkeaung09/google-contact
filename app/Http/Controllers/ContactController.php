@@ -6,6 +6,7 @@ use App\Exports\UsersExport;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
+use Carbon\Carbon;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -137,6 +138,18 @@ class ContactController extends Controller
         return redirect()->route('contact.index');
     }
 
+    public function multipleCopy(\Illuminate\Http\Request $request){
+//        return ["copy message"=>$request->checkbox];
+        $contacts = Contact::all()->whereIn('id',$request->checkbox);
+        foreach ( $contacts as $contact ){
+            $newContact = $contact->replicate();
+            $newContact->created_at = Carbon::now();
+            $newContact->lname = $newContact->lname."Multiple Copy";
+            $newContact->save();
+        }
+        return redirect()->route('contact.index');
+    }
+
     public function export()
     {
 //        return Excel::download(new UsersExport, 'users.xlsx');
@@ -166,6 +179,18 @@ class ContactController extends Controller
         $contact = Contact::withTrashed()->where('id',$id)->restore();
         return redirect()->route('contact.trash');
 
+    }
+
+    public function copy(\Illuminate\Http\Request $request,$id){
+//        return $id;
+        $contact = Contact::find($id);
+//        return $contact;
+        $newContact = $contact->replicate();
+        $newContact->created_at = Carbon::now();
+        $newContact->lname = $newContact->lname." Copy";
+//        return $newContact;
+        $newContact->save();
+        return redirect()->route('contact.index');
     }
 
 

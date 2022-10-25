@@ -1,7 +1,6 @@
 @extends('dashboard')
 @section('content')
 
-
     <div class=" relative">
         <table class="w-[90%] text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class=" text-gray-700 border-b  ">
@@ -30,7 +29,7 @@
             <tbody>
 
             <div class="hidden" id="del-btn">
-                <form action="{{route('contact.multipleDelete')}}" id="multipleIdDelete" method="post" class="">
+                <form  id="multipleIdDelete" method="post" class="">
                     @csrf
                     <div class="flex items-center space-x-4">
                         <div class="">
@@ -53,13 +52,12 @@
                         <div class="">
                             <i class="fa-solid fa-list-dots" id="deleteBtn"></i>
                             <div class="hidden border shadow-sm" id="delShow">
-                                <button  class="px-[50px] bg-blue-600 px-2 py-2 text-white rounded-lg" >Delete</button>
-
+                                <button id="multipleDelete"  class="px-[50px] bg-blue-600 px-2 py-2 text-white rounded-lg" >Multiple Delete</button>
+                                <button id="multipleCopy" class="mt-5 px-[50px] bg-blue-600 px-2 py-2 text-white rounded-lg" >Multiple Copy</button>
                             </div>
+
                         </div>
                     </div>
-
-
                 </form>
             </div>
             @push('script')
@@ -71,7 +69,19 @@
                     let selectAllBtn = document.getElementById('selectAllBtn');
                     let checkBox = document.querySelectorAll('.checkBox')
                     let selectCount = document.getElementById("selectedCount");
+                    let multipleDelete = document.getElementById("multipleDelete");
+                    let multipleCopy = document.getElementById("multipleCopy");
+                    let multipleIdDelete = document.getElementById('multipleIdDelete');
                     let selectedItem = [];
+
+                    multipleDelete.addEventListener("click",function (){
+                        multipleIdDelete.setAttribute('action',"{{route('contact.multipleDelete')}}");
+                    })
+
+                    multipleCopy.addEventListener("click",function (){
+                        multipleIdDelete.setAttribute('action',"{{route('contact.multipleCopy')}}");
+
+                    })
 
 
                     selectAllBtn.addEventListener("click",function (){
@@ -115,6 +125,7 @@
             </tr>
 
             @foreach($contact as $item)
+{{--                {{$item->id}}--}}
 
             <tr class="bg-white dark:bg-gray-800 dark:border-gray-700 group hover:bg-gray-100 mb-4 cursor-pointer">
 
@@ -145,7 +156,7 @@
                                 <p>{{\Illuminate\Support\Str::substr($item->fname,0,1)}}</p>
                             </div>
                             <a href="{{route('contact.show',$item->id)}}">
-                                <h1>{{ $item->fname}}  {{$item->lname}}</h1>
+                                <h1> {{ $item->fname}}  {{$item->lname}}</h1>
                             </a>
                         </div>
                     @endif
@@ -207,9 +218,13 @@
                 <td class="py-4  ">
                     <div class="hidden group-hover:block">
                         <div class="flex space-x-3 ">
-                            <a href="">
-                                <i class="fa-regular fa-copy"></i>
-                            </a>
+
+                                <form id="{{$item->id}}" class="a-tag" action="{{route('contact.copy',$item->id)}}" method="post" >
+                                    @csrf
+                                    <button class="btn-copy" id="btnCopy">
+                                        <i class="fa-regular fa-copy" id="{{$item->id}}"></i>
+                                    </button>
+                                </form>
 
 
                             <a href="{{route('contact.edit',$item->id)}}">
@@ -218,7 +233,7 @@
 
 
 
-                            <form action="{{route('contact.destroy',$item->id)}}" method="post">
+                            <form action="{{route('contact.destroy',$item->id)}}" method="post" id="deleteSingle">
                                 @csrf
                                 @method('delete')
                                 <button type="submit " class="trashBtn" id="trashBtn">
@@ -232,6 +247,9 @@
 
 
             @endforeach
+
+
+
             </tbody>
 
 
@@ -242,9 +260,6 @@
         </form>
     </div>
 
-{{--   <div class="">--}}
-{{--       {{ $items->links() }}--}}
-{{--   </div>--}}
     <div class="row">
         <div class="col-md-12 mt-6">
             {{ $contact->links('pagination::tailwind') }}
