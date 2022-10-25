@@ -6,7 +6,10 @@
             </div>
             <div class="col-span-10">
                 <div class="">
+                    @include('components.query')
+
                     @yield('content')
+                    @stack('script')
                 </div>
             </div>
         </div>

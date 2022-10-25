@@ -3,17 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
-use App\Http\Requests\StoreContactRequest;
-use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
-use http\Env\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
-use function GuzzleHttp\Promise\all;
 
-class ContactController extends Controller
+class ContactApiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,32 +18,22 @@ class ContactController extends Controller
      */
     public function index()
     {
-
         $contact = Contact::latest()->when(\request('keyword'),function ($q){
             $keyword = \request('keyword');
             $q->where("fname",'like',"%$keyword%")->orWhere('lname','like',"%$keyword");
         })->paginate(3)->withQueryString();
-        return view('contact.index',compact('contact'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('contact.create');
+        return response()->json($contact);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreContactRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreContactRequest $request)
+    public function store(Request $request)
     {
+//        return $request->photo;
 
         $contact = new Contact();
         $contact->fname = $request->fname;
@@ -59,8 +45,11 @@ class ContactController extends Controller
         $contact->birthday = $request->birthday;
         $contact->note = $request->note;
         $contact->user_id = Auth::user()->id;
+//        $contact->photo = "min ga lar par";
 
         if($request->hasFile('photos')){
+
+//            return "image par par tal";
             $newName = "cover_".uniqid().".".$request->file('photos')->extension();
             $request->file('photos')->storeAs("public",$newName);
             $contact->photo = $newName;
@@ -69,42 +58,37 @@ class ContactController extends Controller
 
         $contact->save();
 
-        return redirect()->route('contact.index');
+        return response()->json(["success"=>200]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Contact  $contact
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Contact $contact)
+    public function show($id)
     {
+        $contact = Contact::find($id);
+        if(is_null($contact)){
+            return response()->json(["message"=>"There is no products"],404);
+        }
 
-        return view('contact.show',compact('contact'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Contact  $contact
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Contact $contact)
-    {
-        return view('contact.edit')->with('contact',$contact);
+        return response()->json([
+            "product" => $contact
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateContactRequest  $request
-     * @param  \App\Models\Contact  $contact
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateContactRequest $request, Contact $contact)
+    public function update(Request $request, $id)
     {
-
+        $contact = Contact::find($id);
         $contact->fname = $request->fname;
         $contact->lname = $request->lname;
         $contact->company = $request->company;
@@ -115,42 +99,23 @@ class ContactController extends Controller
         $contact->note =$request->note;
         $contact->update();
 
-        return redirect()->route('contact.index');
+        return response()->json("success",200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Contact  $contact
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Contact $contact)
+    public function destroy($id)
     {
+        $contact = Contact::find($id);
         $contact->delete();
-        return redirect()->route('contact.index');
+        return response()->json("soft delete par",204);
     }
 
-    public function multipleDeltete(\Illuminate\Http\Request $request)
-    {
-//        return $request;
-        Contact::destroy($request->checkbox);
-        return redirect()->route('contact.index');
-    }
-
-    public function export()
-    {
-//        return Excel::download(new UsersExport, 'users.xlsx');
-        return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
-//        return (new UsersExport())->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-
-    }
-
-    public function trashBin(){
-        $contact = Contact::onlyTrashed()->get();
-        return view('contact.trash',compact(['contact']));
-    }
-
-    public function forceDelete( $id){
+    public function forceDelete($id){
         $contacts = Contact::withTrashed()->where("id",$id)->get();
 
         Contact::withTrashed()->where('id',$id)->forceDelete();
@@ -159,13 +124,30 @@ class ContactController extends Controller
                 Storage::delete('public/'.$contact->photo);
             }
         }
-        return redirect()->route('contact.trash');
+        return response()->json('forceDelet is OK');
+    }
+
+    public function trash(){
+        $contact = Contact::onlyTrashed()->get();
+        return response()->json($contact);
     }
 
     public function restore($id){
         $contact = Contact::withTrashed()->where('id',$id)->restore();
-        return redirect()->route('contact.trash');
+        return response()->json("restore is OK",200);
+    }
 
+    public function multipleDelete (Request $request) {
+
+        $arr = json_decode( $request->checkbox,true);
+        Contact::destroy($arr);
+        return response()->json('multiple delete is ok' , 204);
+    }
+
+    public function export(){
+        //        return Excel::download(new UsersExport, 'users.xlsx');
+        return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
+//        return (new UsersExport())->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 
 

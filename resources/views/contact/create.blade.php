@@ -7,35 +7,40 @@
                 <div class="img">
                     <div class="flex items-center justify-center relative" id="replactImg">
                         <i class="fa-solid fa-camera fa-2x absolute text-gray-400 "></i>
-                        <img src="{{asset('storage/user.png')}}" class="upload rounded-full w-[50%]" id="default" alt="">
-                        <div class="flex w-[120px] h-[120px] rounded-full bg-blue-600 hidden overflow-hidden" id="div">
-                            <img src="" class="hidden object-cover " id="output" alt="">
-                        </div>
+                        <img src="{{asset('storage/user.png')}}" class="upload rounded-full w-[120px] h-[120px] object-cover w-[50%]" id="default" alt="">
                         <input type="file" name="photos" class="" id="file" hidden>
                     </div>
                 </div>
-                <button type="submit" id="btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg ">Save</button>
+{{--                <h1 class="">San Kyi Tar Par</h1>--}}
+                <x-button>Save</x-button>
             </div>
 
-            <script type="module">
-                let input = document.getElementById('file');
-                let defau = document.getElementById("default");
-                let output = document.getElementById('output');
-                let div = document.getElementById('div');
-                input.addEventListener("change",function (){
-                    let currentFile = this.files[0]
+           @push('script')
+                <script type="module">
+                    let input = document.getElementById('file');
+                    let defau = document.getElementById("default");
+                    let output = document.getElementById('output');
+                    let div = document.getElementById('div');
 
-                    let reader = new FileReader();
-                    reader.readAsDataURL(currentFile)
+                    const btn = document.querySelector(".upload");
+                    const file = document.getElementById("file");
+                    btn.addEventListener("click",function(){
+                        file.click()
 
-                    reader.onload = function (e){
-                        defau.classList.add('hidden')
-                        output.classList.remove('hidden')
-                        div.classList.remove('hidden')
-                        output.src = e.target.result
-                    }
-                })
-            </script>
+                    })
+
+                    input.addEventListener("change",function (){
+                        let currentFile = this.files[0]
+
+                        let reader = new FileReader();
+                        reader.readAsDataURL(currentFile)
+
+                        reader.onload = function (e){
+                            btn.src = e.target.result
+                        }
+                    })
+                </script>
+            @endpush
 
 
             <div class="flex">

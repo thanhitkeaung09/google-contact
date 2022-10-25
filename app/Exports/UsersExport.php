@@ -15,4 +15,10 @@ class UsersExport implements FromCollection
     {
         return Contact::all();
     }
+
+//    public function download(string $string, string $XLSX)
+//    {
+////        return Contact::all();
+//
+//    }
 }

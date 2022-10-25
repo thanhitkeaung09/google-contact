@@ -11,12 +11,6 @@ Alpine.start();
 // console.log(btn)
 // console.log(btn)
 
-const btn = document.querySelector(".upload");
-const file = document.getElementById("file");
-btn.addEventListener("click",function(){
-    // console.log("hello")
-    file.click()
 
-})
 
 
