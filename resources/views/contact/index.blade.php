@@ -1,6 +1,8 @@
 @extends('dashboard')
 @section('content')
 
+
+
     <div class=" relative">
         <table class="w-[90%] text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class=" text-gray-700 border-b  ">
@@ -228,16 +230,16 @@
 
 
                             <a href="{{route('contact.edit',$item->id)}}">
-                                <i class="fa-solid fa-pencil"></i>
+                                <i class="fa-solid fa-pencil text"></i>
                             </a>
 
 
 
-                            <form action="{{route('contact.destroy',$item->id)}}" method="post" id="deleteSingle">
+                            <form action="{{route('contact.destroy',$item->id)}}"  class="trash-tag" method="post" id="{{$item->id}}">
                                 @csrf
                                 @method('delete')
                                 <button type="submit " class="trashBtn" id="trashBtn">
-                                    <i class="fa-solid fa-trash"></i>
+                                    <i class="fa-solid fa-trash" id="{{$item->id}}"></i>
                                 </button>
                             </form>
                         </div>

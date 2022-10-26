@@ -13,9 +13,10 @@ let aTagSubmit = document.querySelectorAll('.a-tag');
 let multipleCopy = document.getElementById("multipleCopy");
 let multipleIdDelete = document.getElementById('multipleIdDelete');
 let multipleDelete = document.getElementById("multipleDelete");
-let trashBtn = document.getElementById('trashBtn');
+let trashBtn = document.querySelectorAll('.trashBtn');
 let deleteSingle = document.getElementById('deleteSingle');
 let copyBtn = document.querySelectorAll(".btn-copy");
+let trashTagSubmit = document.querySelectorAll('.trash-tag');
 
 copyBtn.forEach(btn=>{
     btn.addEventListener('click', function (e){
@@ -81,19 +82,29 @@ multipleDelete.addEventListener('click', function (e){
     })
 })
 
-trashBtn.addEventListener('click', function (e){
-    e.preventDefault();
-    Swal.fire({
-        title: 'Do you want to delete the contact?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Delete',
-        denyButtonText: `Don't delete`,
-    }).then((result) => {
-        /* Read more about isConfirmed, isDenied below */
-        if ( result.isConfirmed) {
-            deleteSingle.submit();
-        }
+trashBtn.forEach(item => {
+    item.addEventListener('click', function (e){
+        e.preventDefault();
+        Swal.fire({
+            title: 'Do you want to delete the contact?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            denyButtonText: `Don't delete`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if ( result.isConfirmed) {
+                console.log("this is delete")
+                // deleteSingle.submit();
+                trashTagSubmit.forEach(item => {
+                    // console.log(e.target.id);
+                    if(e.target.id === item.getAttribute('id')){
+                        item.submit();
+                    }
+                    // return item.getAttribute('id')
+                })
+            }
+        })
     })
 })
 

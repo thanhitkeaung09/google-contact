@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
 use App\Models\Contact;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,10 +19,18 @@ class ContactApiController extends Controller
      */
     public function index()
     {
-        $contact = Contact::latest()->when(\request('keyword'),function ($q){
+//        $contact = Contact::latest()->when(\request('keyword'),function ($q){
+//            $keyword = \request('keyword');
+//            $q->where("fname",'like',"%$keyword%")->orWhere('lname','like',"%$keyword");
+//        })->paginate(3)->withQueryString();
+
+//        $contact = Contact::all()->where('user_id',Auth::user()->id);
+
+        $contact = Contact::where('user_id',Auth::user()->id)->when(\request('keyword'),function ($q){
             $keyword = \request('keyword');
             $q->where("fname",'like',"%$keyword%")->orWhere('lname','like',"%$keyword");
         })->paginate(3)->withQueryString();
+
         return response()->json($contact);
     }
 
@@ -148,6 +157,29 @@ class ContactApiController extends Controller
         //        return Excel::download(new UsersExport, 'users.xlsx');
         return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
 //        return (new UsersExport())->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
+
+    public function copy(\Illuminate\Http\Request $request,$id){
+        $contact = Contact::find($id);
+        $newContact = $contact->replicate();
+        $newContact->created_at = Carbon::now();
+        $newContact->lname = $newContact->lname." Copy";
+        $newContact->save();
+        return response()->json('Copy contact successfully',200);
+    }
+
+    public function multipleCopy(\Illuminate\Http\Request $request){
+//        return [1,2];
+        $lists = json_decode( $request->checkbox,true);
+        $contacts = Contact::all()->whereIn('id',$lists);
+//        return $contacts;
+        foreach ( $contacts as $contact ){
+            $newContact = $contact->replicate();
+            $newContact->created_at = Carbon::now();
+            $newContact->lname = $newContact->lname." Multiple Copy";
+            $newContact->save();
+        }
+        return response()->json("Multiply Copies successful",200);
     }
 
 

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use function GuzzleHttp\Promise\all;
@@ -23,11 +24,20 @@ class ContactController extends Controller
      */
     public function index()
     {
+//           $contact = Contact::latest()->when(\request('keyword'),function ($q){
+//            $keyword = \request('keyword');
+//            $q->where("fname",'like',"%$keyword%")->orWhere('lname','like',"%$keyword");
+//        })->paginate(3)->withQueryString();
 
-        $contact = Contact::latest()->when(\request('keyword'),function ($q){
+        $contact = Contact::where('user_id',Auth::user()->id)->when(\request('keyword'),function ($q){
             $keyword = \request('keyword');
             $q->where("fname",'like',"%$keyword%")->orWhere('lname','like',"%$keyword");
         })->paginate(3)->withQueryString();
+
+//     $contact = Contact::all()->where('user_id',Auth::user()->id);
+//        dd($contact);
+
+
         return view('contact.index',compact('contact'));
     }
 
@@ -138,17 +148,7 @@ class ContactController extends Controller
         return redirect()->route('contact.index');
     }
 
-    public function multipleCopy(\Illuminate\Http\Request $request){
-//        return ["copy message"=>$request->checkbox];
-        $contacts = Contact::all()->whereIn('id',$request->checkbox);
-        foreach ( $contacts as $contact ){
-            $newContact = $contact->replicate();
-            $newContact->created_at = Carbon::now();
-            $newContact->lname = $newContact->lname."Multiple Copy";
-            $newContact->save();
-        }
-        return redirect()->route('contact.index');
-    }
+
 
     public function export()
     {
@@ -190,6 +190,18 @@ class ContactController extends Controller
         $newContact->lname = $newContact->lname." Copy";
 //        return $newContact;
         $newContact->save();
+        return redirect()->route('contact.index');
+    }
+
+    public function multipleCopy(\Illuminate\Http\Request $request){
+//        return ["copy message"=>$request->checkbox];
+        $contacts = Contact::all()->whereIn('id',$request->checkbox);
+        foreach ( $contacts as $contact ){
+            $newContact = $contact->replicate();
+            $newContact->created_at = Carbon::now();
+            $newContact->lname = $newContact->lname." Multiple Copy";
+            $newContact->save();
+        }
         return redirect()->route('contact.index');
     }
 
