@@ -32,6 +32,7 @@ Route::delete("/forceDelete/{id}",[\App\Http\Controllers\ContactController::clas
 Route::post("/restore/{id}",[\App\Http\Controllers\ContactController::class,'restore'])->name('contact.restore');
 //Route::post('/selectAll',[\App\Http\Controllers\ContactController::class,'selectAll'])->name("contact.selectAll");
 Route::post('/copy/{id}',[\App\Http\Controllers\ContactController::class,'copy'])->name('contact.copy');
+Route::resource('/store',\App\Http\Controllers\StoreController::class);
 // routes/web.php
 
 

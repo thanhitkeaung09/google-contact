@@ -6,6 +6,7 @@ use App\Exports\UsersExport;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
 use App\Models\Contact;
+use App\Models\Store;
 use Carbon\Carbon;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
@@ -204,6 +205,19 @@ class ContactController extends Controller
         }
         return redirect()->route('contact.index');
     }
+
+//    public function transfer(\Illuminate\Http\Request $request, $id){
+////        return Contact::id();
+//        return $id;
+//        $store = new Store();
+//        $store->sender = Auth::user()->email;
+//        $store->receiver = $request->receiverEmail;
+//        $store->contact_id =
+//
+//        $store->save();
+//
+//        return "data success transfer";
+//    }
 
 
 }
