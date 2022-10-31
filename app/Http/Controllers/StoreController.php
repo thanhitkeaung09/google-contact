@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreStoreRequest;
 use App\Http\Requests\UpdateStoreRequest;
+use App\Models\Contact;
 use App\Models\Store;
+use Illuminate\Support\Facades\Auth;
 
 class StoreController extends Controller
 {
@@ -15,7 +17,24 @@ class StoreController extends Controller
      */
     public function index()
     {
-        //
+        $stores = Store::all();
+        foreach ($stores as $store){
+//            echo $store;
+            if($store->receiver === Auth::user()->email){
+                $contacts = Contact::find($store->contact_id);
+//                echo $store->contact_id;
+//                $ids = $store->contact_id;
+//                echo json_decode($ids,true);
+
+//                $contacts = Contact::all()->whereIn('id',[3,7]);
+//
+                return view('store.index',compact(['contacts','store']));
+            }
+
+        }
+        return view('store.diff');
+
+
     }
 
     /**
@@ -36,7 +55,13 @@ class StoreController extends Controller
      */
     public function store(StoreStoreRequest $request)
     {
-        return $request;
+//        return $request;
+        $store = new Store();
+        $store->sender = Auth::user()->email;
+        $store->receiver = $request->receiverEmail;
+        $store->contact_id = $request->contact_id;
+        $store->save();
+        return redirect()->route('contact.index');
     }
 
     /**

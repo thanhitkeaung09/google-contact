@@ -153,8 +153,11 @@ class ContactController extends Controller
 
     public function export()
     {
+
 //        return Excel::download(new UsersExport, 'users.xlsx');
-        return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
+//        $export = new UsersExport([14,17]);
+        return Excel::download(new UsersExport(), 'users.docx',\Maatwebsite\Excel\Excel::CSV);
+//        return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
 //        return (new UsersExport())->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
     }
@@ -206,18 +209,7 @@ class ContactController extends Controller
         return redirect()->route('contact.index');
     }
 
-//    public function transfer(\Illuminate\Http\Request $request, $id){
-////        return Contact::id();
-//        return $id;
-//        $store = new Store();
-//        $store->sender = Auth::user()->email;
-//        $store->receiver = $request->receiverEmail;
-//        $store->contact_id =
 //
-//        $store->save();
-//
-//        return "data success transfer";
-//    }
 
 
 }

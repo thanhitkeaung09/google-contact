@@ -14,6 +14,13 @@
             </a>
         </li>
 
+        <li class="text-center rounded-full text-black py-1 side-bar ">
+            <a href="{{route('store.index')}}" class="flex items-center space-x-4 ml-5 btn">
+                <i class="fa-regular fa-user"></i>
+                <p>Shared Contact</p>
+            </a>
+        </li>
+
         <li class="text-center rounded-full text-black py-1 side-bar">
             <a href="{{route('contact.trash')}}" class="flex items-center space-x-4 ml-5 btn">
                 <i class="fa-solid fa-trash"></i>
