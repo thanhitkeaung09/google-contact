@@ -154,9 +154,17 @@ class ContactController extends Controller
     public function export()
     {
 
+        $export = new UsersExport([
+            [14, 17, 18],
+
+        ]);
+
+        return Excel::download($export, 'invoices.xlsx');
+
+
 //        return Excel::download(new UsersExport, 'users.xlsx');
 //        $export = new UsersExport([14,17]);
-        return Excel::download(new UsersExport(), 'users.docx',\Maatwebsite\Excel\Excel::CSV);
+//        return Excel::download(new UsersExport(), 'users.docx',\Maatwebsite\Excel\Excel::CSV);
 //        return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
 //        return (new UsersExport())->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
 
