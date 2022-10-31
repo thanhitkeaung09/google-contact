@@ -37,4 +37,5 @@ Route::resource('/store',\App\Http\Controllers\StoreController::class);
 
 
 Route::get('users/export/', [\App\Http\Controllers\ContactController::class, 'export'])->name('contact.export');
+Route::post('users/multipleExport/', [\App\Http\Controllers\ContactController::class, 'multipleExport'])->name('contact.multipleExport');
 require __DIR__.'/auth.php';

@@ -1,3 +1,4 @@
+
 <div class="">
     <div class="text-center">
         <a href="{{route('contact.create')}}" class="flex items-center justify-center space-x-4 bg-white px-2.5 py-3 rounded-full shadow w-[84%] ">
@@ -22,25 +23,24 @@
         </li>
 
         <li class="text-center rounded-full text-black py-1 side-bar">
-            <a href="{{route('contact.trash')}}" class="flex items-center space-x-4 ml-5 btn">
+            <a id="bin" href="{{route('contact.trash')}}" class="flex items-center space-x-4 ml-5 btn">
                 <i class="fa-solid fa-trash"></i>
                 <p>Trash Bin</p>
+            </a>
+        </li>
+
+        <li class="text-center rounded-full text-black py-1 side-bar">
+            <a href="#" id="print" class=" flex items-center space-x-4 ml-5 btn">
+                <i class="fa-solid fa-print"></i>
+                <p>Print</p>
             </a>
         </li>
     </ul>
 </div>
 
 <script type="module">
-    // let sidebtn = document.querySelectorAll('.side-bar');
-    // sidebtn.forEach(item => {
-    //     item.addEventListener("click", function(e){
-    //         // e.preventDefault();
-    //         sidebtn.forEach(el=>{
-    //             el.classList.remove("bg-blue-400")
-    //         })
-    //         e.currentTarget.classList.add("bg-blue-400")
-    //     })
-    //     // item.classList.remove("bg-blue-400")
-    //
-    // })
+    let print = document.getElementById('print');
+      print.addEventListener('click',function (){
+          window.print();
+      })
 </script>

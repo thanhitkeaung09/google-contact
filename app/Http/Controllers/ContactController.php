@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MultipleExport;
 use App\Exports\UsersExport;
 use App\Http\Requests\StoreContactRequest;
 use App\Http\Requests\UpdateContactRequest;
@@ -153,13 +154,16 @@ class ContactController extends Controller
 
     public function export()
     {
-
-//        return Excel::download(new UsersExport, 'users.xlsx');
-//        $export = new UsersExport([14,17]);
         return Excel::download(new UsersExport(), 'users.docx',\Maatwebsite\Excel\Excel::CSV);
-//        return Excel::download(new UsersExport, 'users.docx',\Maatwebsite\Excel\Excel::CSV);
-//        return (new UsersExport())->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
+    }
 
+    public function multipleExport(\Illuminate\Http\Request $request){
+//        dd( $request->checkbox);
+        $export = new MultipleExport([
+            [$request->checkbox]
+        ]);
+
+        return Excel::download($export,'multi.xlsx');
     }
 
     public function trashBin(){

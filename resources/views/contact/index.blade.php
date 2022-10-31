@@ -56,6 +56,9 @@
                             <div class="hidden border shadow-sm" id="delShow">
                                 <button id="multipleDelete"  class="px-[50px] bg-blue-600 px-2 py-2 text-white rounded-lg" >Multiple Delete</button>
                                 <button id="multipleCopy" class="mt-5 px-[50px] bg-blue-600 px-2 py-2 text-white rounded-lg" >Multiple Copy</button>
+                                <button id="multiExport" class="px-2 py-2 text-white rounded-lg bg-blue-400" >Multiple Export
+                                </button>
+
                             </div>
 
                         </div>
@@ -74,6 +77,8 @@
                     let multipleDelete = document.getElementById("multipleDelete");
                     let multipleCopy = document.getElementById("multipleCopy");
                     let multipleIdDelete = document.getElementById('multipleIdDelete');
+                    let multipleExport = document.getElementById('multiExport');
+
                     let selectedItem = [];
 
                     multipleDelete.addEventListener("click",function (){
@@ -83,6 +88,11 @@
                     multipleCopy.addEventListener("click",function (){
                         multipleIdDelete.setAttribute('action',"{{route('contact.multipleCopy')}}");
 
+                    })
+
+                    multipleExport.addEventListener("click",function (){
+                        console.log("hello export")
+                        multipleIdDelete.setAttribute('action',"{{route('contact.multipleExport')}}");
                     })
 
 
@@ -268,6 +278,10 @@
             <script>
                 let shareBtn = document.querySelectorAll('.share-btn');
                 let shareId = document.querySelectorAll(".share-id");
+
+
+
+
                 shareBtn.forEach(share =>{
                     share.addEventListener("mouseover",function(e){
                         console.log("hello")
@@ -283,8 +297,12 @@
 
         <form action="{{route('contact.export')}}" method="get" class="flex justify-end">
             @csrf
-            <button class="px-2 py-2 text-white rounded-lg bg-blue-400" >Download</button>
+            <button class="px-2 py-2 text-white rounded-lg bg-blue-400" >Export All</button>
         </form>
+
+
+
+
     </div>
 
     <div class="row">
